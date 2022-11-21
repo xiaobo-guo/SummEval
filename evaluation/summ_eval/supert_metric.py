@@ -48,10 +48,11 @@ class SupertMetric(Metric):
         scores = get_sbert_score(ref_vecs, summ_vecs, self.sim_metric)[0]
         return {"supert": scores}
 
-    def evaluate_batch(self, summaries, input_texts, aggregate=True):
+    def evaluate_batch(self, summaries, input_texts, aggregate=True, show_progress_bar=False):
+        import tqdm
         corpus_score_dict = Counter()
         results = []
-        for summ, input_text in zip(summaries, input_texts):
+        for summ, input_text in tqdm.tqdm(zip(summaries, input_texts),total=len(summaries),disable=not show_progress_bar):
             results.append(self.evaluate_example(summ, input_text))
         if aggregate:
             [corpus_score_dict.update(x) for x in results]

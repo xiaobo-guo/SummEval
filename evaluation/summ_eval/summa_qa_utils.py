@@ -171,7 +171,7 @@ class QA_Metric:
         return {"summaqa_avg_prob": score_prob/len(questions), "summaqa_avg_fscore": score_f/len(questions)}
 
 
-def evaluate_corpus(srcs, gens, model=None, questionss=None, aswss=None, batch_size=8, max_seq_len=384, aggregate=True):
+def evaluate_corpus(srcs, gens, model=None, questionss=None, aswss=None, batch_size=8, max_seq_len=384, aggregate=True, show_progress_bar=False):
     """
     Calculate the QA scores for an entire corpus.
     Args:
@@ -197,7 +197,7 @@ def evaluate_corpus(srcs, gens, model=None, questionss=None, aswss=None, batch_s
     else:
         global_score = []
 
-    for i, (src, gen) in enumerate(tqdm.tqdm(zip(srcs, gens), total=len(srcs), ncols=100, desc='calcuale Summa QA')):
+    for i, (src, gen) in enumerate(tqdm.tqdm(zip(srcs, gens), total=len(srcs), ncols=100, desc='calcuale Summa QA', disable= not show_progress_bar)):
         # if questionss is None, generate the questions and answers else get the corrisponding ones.
         if not questionss:
             masked_questions, masked_question_asws = question_generator.get_questions(src)
