@@ -1,0 +1,11 @@
+env/
+evaluation/summ_eval.egg-info/
+evaluation/summ_eval/meteor-1.5.jar
+evaluation/summ_eval/stanford-corenlp-full-2018-10-05/
+evaluation/summ_eval/__pycache__/
+evaluation/tests/__pycache__/
+evaluation/summ_eval/sentence_transformers/evaluation/__pycache__/
+evaluation/summ_eval/sentence_transformers/__pycache__/
+evaluation/summ_eval/sentence_transformers/*/__pycache__/
+evaluation/summ_eval/embeddings/
+evaluation/summ_eval/sentence_transformers/models/tokenizer/__pycache__/

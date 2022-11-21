@@ -4,6 +4,7 @@ import re
 import string
 import torch
 from transformers import BertTokenizer, BertForQuestionAnswering
+import tqdm
 
  # code from huggingface see https://huggingface.co/transformers/model_doc/bert.html#bertforquestionanswering
 
@@ -149,7 +150,8 @@ class QA_Metric:
                 asws.extend(asw_pred)
                 probs.extend(prob)
                 slines = []
-            cur_dict = self.model.tokenizer.encode_plus(question, evaluated_text, max_length=self.max_seq_len, pad_to_max_length=True, return_token_type_ids=True)
+            # cur_dict = self.model.tokenizer.encode_plus(question, evaluated_text, max_length=self.max_seq_len, padding='max_length', return_token_type_ids=True)
+            cur_dict = self.model.tokenizer.encode_plus(question, evaluated_text, truncation=True, padding='max_length', return_token_type_ids=True)
             slines.append(cur_dict)
         if slines != []:
             input_ids = torch.tensor([ex['input_ids'] for ex in slines])
@@ -195,7 +197,7 @@ def evaluate_corpus(srcs, gens, model=None, questionss=None, aswss=None, batch_s
     else:
         global_score = []
 
-    for i, (src, gen) in enumerate(zip(srcs, gens)):
+    for i, (src, gen) in enumerate(tqdm.tqdm(zip(srcs, gens), total=len(srcs), ncols=100, desc='calcuale Summa QA')):
         # if questionss is None, generate the questions and answers else get the corrisponding ones.
         if not questionss:
             masked_questions, masked_question_asws = question_generator.get_questions(src)

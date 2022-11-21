@@ -50,14 +50,14 @@ class SummaQAMetric(Metric):
 
     def evaluate_example(self, summary, input_text):
         if self.tokenize:
-            input_text = nlp(input_text, disable=["tagger", "textcat"])
+            input_text = nlp(input_text, disable=["tagger", "textcat","lemmatizer"])
         masked_questions, answer_spans = self.question_generator.get_questions(input_text)
         score_dict = self.qa_metric.compute(masked_questions, answer_spans, summary)
         return score_dict
 
     def evaluate_batch(self, summaries, input_texts, aggregate=True):
         if self.tokenize:
-            input_texts = [nlp(text, disable=["tagger", "textcat"]) for text in input_texts]
+            input_texts = [nlp(text, disable=["tagger", "textcat","lemmatizer"]) for text in input_texts]
         scores = evaluate_corpus(input_texts, summaries, batch_size=self.batch_size, \
                   max_seq_len=self.max_seq_len, aggregate=aggregate)
         return scores

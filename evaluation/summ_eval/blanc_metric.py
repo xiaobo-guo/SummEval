@@ -17,18 +17,18 @@ class BlancMetric(Metric):
 
     def evaluate_example(self, summary, input_text):
         if self.use_tune:
-            blanc_mod = BlancTune(device=self.device)
+            blanc_mod = BlancTune(device=self.device, show_progress_bar=False)
         else:
-            blanc_mod = BlancHelp(device=self.device)
+            blanc_mod = BlancHelp(device=self.device, show_progress_bar=False)
         score = blanc_mod.eval_once(input_text, summary)
         return {"blanc": score}
 
-    def evaluate_batch(self, summaries, input_texts, aggregate=True):
+    def evaluate_batch(self, summaries, input_texts, aggregate=True, show_progress_bar=True):
         corpus_score_dict = Counter()
         if self.use_tune:
-            blanc_mod = BlancTune(device='cuda', inference_batch_size=self.inference_batch_size, finetune_batch_size=self.finetune_batch_size)
+            blanc_mod = BlancTune(device='cuda', inference_batch_size=self.inference_batch_size, finetune_batch_size=self.finetune_batch_size,show_progress_bar=show_progress_bar)
         else:
-            blanc_mod = BlancTune(device=self.device, inference_batch_size=self.inference_batch_size)
+            blanc_mod = BlancTune(device=self.device, inference_batch_size=self.inference_batch_size,show_progress_bar=show_progress_bar)
             
         results = blanc_mod.eval_pairs(input_texts, summaries)
         results = [{"blanc": score} for score in results]

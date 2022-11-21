@@ -339,6 +339,8 @@ def build_pseudo_ref(sent_info_dic, sents_weights, all_tokens, all_token_vecs):
     ref_tokens = []
     for ref in ref_idxs:
         vv, tt = kill_stopwords(ref, all_token_vecs, all_tokens)
+        if vv.shape[0] == 0:
+            vv,tt = keep_stopwords(ref, all_token_vecs, all_tokens)
         ref_vecs.append(vv)
         ref_tokens.append(tt)
     return ref_vecs, ref_tokens
@@ -411,6 +413,8 @@ def get_token_vecs(model, sents, remove_stopwords=True):
         mystopwords = list(set(stopwords.words()))
         mystopwords.extend(['[cls]','[sep]'])
         wanted_idx = [j for j,tk in enumerate(full_token) if tk.lower() not in mystopwords]
+        if wanted_idx == []:
+            wanted_idx = [k for k in range(len(full_token))]
     else:
         wanted_idx = [k for k in range(len(full_token))]
     return full_vec[wanted_idx], np.array(full_token)[wanted_idx]
@@ -426,6 +430,21 @@ def kill_stopwords(sent_idx, all_token_vecs, all_tokens):
             full_token.extend(all_tokens[si])
     # For now we're hard-coding English for CNNDM
     mystopwords = list(set(stopwords.words()))
+    mystopwords.extend(['[cls]','[sep]'])
+    wanted_idx = [j for j,tk in enumerate(full_token) if tk.lower() not in mystopwords]
+    return full_vec[wanted_idx], np.array(full_token)[wanted_idx]
+
+def keep_stopwords(sent_idx, all_token_vecs, all_tokens):
+    for i,si in enumerate(sent_idx):
+        assert len(all_token_vecs[si]) == len(all_tokens[si])
+        if i == 0:
+            full_vec = copy.deepcopy(all_token_vecs[si])
+            full_token = copy.deepcopy(all_tokens[si])
+        else:
+            full_vec = np.row_stack((full_vec, all_token_vecs[si]))
+            full_token.extend(all_tokens[si])
+    # For now we're hard-coding English for CNNDM
+    mystopwords = list()
     mystopwords.extend(['[cls]','[sep]'])
     wanted_idx = [j for j,tk in enumerate(full_token) if tk.lower() not in mystopwords]
     return full_vec[wanted_idx], np.array(full_token)[wanted_idx]

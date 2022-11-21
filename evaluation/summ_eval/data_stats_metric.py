@@ -48,17 +48,17 @@ class DataStatsMetric(Metric):
 
     def evaluate_example(self, summary, input_text):
         if self.tokenize:
-            input_text = _en(input_text, disable=["tagger", "parser", "ner", "textcat"])
+            input_text = _en(input_text, disable=["tagger", "parser", "ner", "textcat","lemmatizer"])
             input_text = [tok.text for tok in input_text]
-            summary = _en(summary, disable=["tagger", "parser", "ner", "textcat"])
+            summary = _en(summary, disable=["tagger", "parser", "ner", "textcat","lemmatizer"])
             summary = [tok.text for tok in summary]
         fragments = Fragments(summary, input_text, case=self.case)
         coverage = fragments.coverage()
         density = fragments.density()
         compression = fragments.compression()
         score_dict = {"coverage": coverage, "density": density, "compression": compression}
-        tokenized_summary = fragments._norm_summary
-        tokenized_text = fragments._norm_text
+        tokenized_summary = fragments.summary
+        tokenized_text = fragments.text
         score_dict["summary_length"] = len(tokenized_summary)
         for i in range(1, self.n_gram + 1):
             input_ngrams = list(find_ngrams(tokenized_text, i))

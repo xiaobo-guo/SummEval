@@ -7,6 +7,7 @@ import gin
 from summ_eval.metric import Metric
 from summ_eval.test_util import rouge_empty
 import subprocess
+import tqdm
 
 try:
     ROUGE_HOME = os.environ['ROUGE_HOME']
@@ -69,9 +70,15 @@ class RougeMetric(Metric):
         shutil.rmtree(self.r.model_dir)
         return {"rouge": output_dict}
 
-    def evaluate_batch(self, summaries, references, aggregate=True):
+    def evaluate_batch(self, summaries, references, aggregate=True, show_progress_bar=False):
         if not aggregate:
-            results = [self.evaluate_example(summ, ref) for ref, summ in zip(references, summaries)]
+            results = list()
+            for ref,summ in tqdm.tqdm(zip(references, summaries),total=len(references),disable=not show_progress_bar):
+                try:
+                    results.append(self.evaluate_example(summ,ref))
+                except:
+                    results.append(rouge_empty)
+            # results = [self.evaluate_example(summ, ref) for ref, summ in zip(references, summaries)]
             return results
         self.r.system_dir = tempfile.mkdtemp()
         self.r.model_dir = tempfile.mkdtemp()

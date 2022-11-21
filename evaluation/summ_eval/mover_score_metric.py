@@ -3,6 +3,7 @@ import os
 from collections import defaultdict
 import gin
 import numpy as np
+import tqdm
 
 from summ_eval.metric import Metric
 
@@ -30,9 +31,9 @@ class MoverScoreMetric(Metric):
         """
         self.version = version
         if self.version == 1:
-            from moverscore import get_idf_dict, word_mover_score
+            from summ_eval.moverscore.moverscore import get_idf_dict, word_mover_score
         else:
-            from moverscore_v2 import get_idf_dict, word_mover_score
+            from summ_eval.moverscore.moverscore_v2 import get_idf_dict, word_mover_score
         self.get_idf_dict = get_idf_dict
         self.word_mover_score = word_mover_score
         stop_words = []
@@ -52,7 +53,7 @@ class MoverScoreMetric(Metric):
         score_dict = {"mover_score" : score[0]}
         return score_dict
 
-    def evaluate_batch(self, summaries, references, aggregate=True):
+    def evaluate_batch(self, summaries, references, aggregate=True, show_progress_bar=False):
         refs = references
         if isinstance(references[0], list):
             refs = [" ".join(ref) for ref in references]
@@ -61,7 +62,7 @@ class MoverScoreMetric(Metric):
         idf_dict_ref = self.get_idf_dict(refs)
         scores = []
         if isinstance(references[0], list):
-            for reference, summary in zip(references, summaries):
+            for reference, summary in tqdm.tqdm(zip(references, summaries),total=len(references), ncols=100, desc='mover score', disable= not show_progress_bar):
                 s = self.word_mover_score(reference, [summary]*len(reference), idf_dict_ref, idf_dict_summ, \
                           stop_words=self.stop_words, n_gram=self.n_gram, remove_subwords=self.remove_subwords,\
                           batch_size=self.batch_size)
@@ -69,7 +70,7 @@ class MoverScoreMetric(Metric):
         else:
             scores = self.word_mover_score(references, summaries, idf_dict_ref, idf_dict_summ, \
                             stop_words=self.stop_words, n_gram=self.n_gram, remove_subwords=self.remove_subwords,\
-                            batch_size=self.batch_size)
+                            batch_size=self.batch_size, show_progress_bar=show_progress_bar)
         if aggregate:
             return {"mover_score": sum(scores)/len(scores)}
         else:
