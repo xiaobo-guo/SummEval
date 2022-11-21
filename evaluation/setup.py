@@ -25,12 +25,12 @@ setup(name='summ_eval',
       install_requires=[
           'bert-score', 
           'gin-config', 
-          'moverscore',
           'pytorch_pretrained_bert', 
           'psutil',
           'six', 
           'numpy>=1.11.0',
           'stanza',
+          'scikit-learn',
           'sacremoses',
           'transformers>=2.2.0',
           'spacy>=2.2.0',
@@ -42,6 +42,10 @@ setup(name='summ_eval',
           'scipy',
           'networkx',
           'blanc',
+          'stanza',
+          'sentence_transformers',
+          'wmd',
+          'pyrouge'
       ],
       entry_points={
           'console_scripts': [
@@ -49,3 +53,4 @@ setup(name='summ_eval',
           ],
       }
 )
+

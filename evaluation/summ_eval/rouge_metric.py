@@ -70,7 +70,7 @@ class RougeMetric(Metric):
         shutil.rmtree(self.r.model_dir)
         return {"rouge": output_dict}
 
-    def evaluate_batch(self, summaries, references, aggregate=True, show_progress_bar=False):
+    def evaluate_batch(self, summaries, references, aggregate=False, show_progress_bar=False):
         if not aggregate:
             results = list()
             for ref,summ in tqdm.tqdm(zip(references, summaries),total=len(references),disable=not show_progress_bar):
@@ -80,26 +80,6 @@ class RougeMetric(Metric):
                     results.append(rouge_empty)
             # results = [self.evaluate_example(summ, ref) for ref, summ in zip(references, summaries)]
             return results
-        self.r.system_dir = tempfile.mkdtemp()
-        self.r.model_dir = tempfile.mkdtemp()
-        self.r.system_filename_pattern = 'system.(\d+).txt'
-        self.r.model_filename_pattern = 'model.[A-Z].#ID#.txt'
-        for idx, (refs, summ) in enumerate(zip(references, summaries)):
-            with open(os.path.join(self.r.system_dir, f"system.{idx}.txt"), "w") as outputf:
-                outputf.write(summ)
-            if not isinstance(refs, list):
-                refs = [refs]
-            for ref_idx, ref in enumerate(refs):
-                with open(os.path.join(self.r.model_dir, f"model.{chr(ord('A') + ref_idx)}.{idx}.txt"), "w") as outputf:
-                    outputf.write(ref)
-        if self.rouge_args is not None:
-            output = self.r.convert_and_evaluate(rouge_args=f"-e {self.r.data_dir} " + self.r.args)
-        else:
-            output = self.r.convert_and_evaluate()
-        output_dict = self.r.output_to_dict(output)
-        shutil.rmtree(self.r.system_dir)
-        shutil.rmtree(self.r.model_dir)
-        return {"rouge": output_dict}
 
     @property
     def supports_multi_ref(self):
