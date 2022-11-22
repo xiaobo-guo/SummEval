@@ -7,6 +7,7 @@ Please run the following command and add it to your startup script:
 Please also run this command: 
 > pip install -U  git+https://github.com/bheinzerling/pyrouge.git
 
+> export PYTHONPATH=$PYTHONPATH:/home/xiaobo/SLP/SummEval/evaluation/summ_eval
 ## Download nltk relevant things
 > import nltk
 
