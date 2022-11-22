@@ -46,7 +46,7 @@ class SyntacticMetric(Metric):
                 corpus_score_dict = Counter()
             else:
                 corpus_score_dict = []
-            for count, summ in enumerate(tqdm.tqdm(summaries,desc='Calculate Syntactic',ncols=100)):
+            for count, summ in enumerate(tqdm.tqdm(summaries,desc='Calculate Syntactic',ncols=100, disable=not show_progress_bar)):
                 print(count)
                 stats = get_stats(client, summ)
                 if aggregate:

@@ -52,7 +52,7 @@ class SupertMetric(Metric):
         import tqdm
         corpus_score_dict = Counter()
         results = []
-        for summ, input_text in tqdm.tqdm(zip(summaries, input_texts),total=len(summaries),disable=not show_progress_bar, ncols=100):
+        for summ, input_text in tqdm.tqdm(zip(summaries, input_texts),total=len(summaries),disable=not show_progress_bar, ncols=100, desc='Calculate Supert'):
             results.append(self.evaluate_example(summ, input_text))
         if aggregate:
             [corpus_score_dict.update(x) for x in results]

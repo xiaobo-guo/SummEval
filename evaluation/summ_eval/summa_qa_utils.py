@@ -197,7 +197,7 @@ def evaluate_corpus(srcs, gens, model=None, questionss=None, aswss=None, batch_s
     else:
         global_score = []
 
-    for i, (src, gen) in enumerate(tqdm.tqdm(zip(srcs, gens), total=len(srcs), ncols=100, desc='calcuale Summa QA', disable= not show_progress_bar)):
+    for i, (src, gen) in enumerate(tqdm.tqdm(zip(srcs, gens), total=len(srcs), ncols=100, desc='Calcuale Summa QA', disable= not show_progress_bar)):
         # if questionss is None, generate the questions and answers else get the corrisponding ones.
         if not questionss:
             masked_questions, masked_question_asws = question_generator.get_questions(src)
