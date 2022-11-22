@@ -41,7 +41,7 @@ class RougeMetric(Metric):
         # 
         log_level = logging.ERROR if not verbose else None
         try:
-            self.r = Rouge155(rouge_dir=rouge_dir, rouge_args=rouge_args)
+            self.r = Rouge155(rouge_dir=rouge_dir, rouge_args=rouge_args, log_level=log_level)
         except:
             print(f'Please run this command: \n pip install -U  git+https://github.com/bheinzerling/pyrouge.git')
             exit()
