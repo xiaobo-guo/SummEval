@@ -55,7 +55,7 @@ class RougeWeMetric(Metric):
                       f"rouge_we_{self.n_gram}_f": score[2]}
         return score_dict
 
-    def evaluate_batch(self, summaries, references, aggregate=True):
+    def evaluate_batch(self, summaries, references, aggregate=True, show_progress_bar=False):
         p = Pool(processes=self.n_workers)
         results = p.starmap(self.evaluate_example, zip(summaries, references))
         p.close()

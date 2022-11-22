@@ -39,7 +39,7 @@ class CiderMetric(Metric):
         score_dict = {"cider": score}
         return score_dict
 
-    def evaluate_batch(self, summaries, references, aggregate=True):
+    def evaluate_batch(self, summaries, references, aggregate=True, show_progress_bar=False):
         if self.tokenize:
             if isinstance(references[0], str):
                 references = [" ".join(tokenizer.tokenize(reference)) \

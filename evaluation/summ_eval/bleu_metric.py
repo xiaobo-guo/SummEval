@@ -41,7 +41,7 @@ class BleuMetric(Metric):
         score_dict = {"bleu" : score.score}
         return score_dict
 
-    def evaluate_batch(self, summaries, references, aggregate=True):
+    def evaluate_batch(self, summaries, references, aggregate=True, show_progress_bar=False):
         if aggregate:
             if isinstance(references[0], str):
                 references = [references]

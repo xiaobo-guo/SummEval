@@ -44,7 +44,7 @@ class SentenceMoversMetric(Metric):
         score_dict = {f"sentence_movers_{self.wordrep}_{self.metric}": score}
         return score_dict
 
-    def evaluate_batch(self, summaries, references, aggregate=True):
+    def evaluate_batch(self, summaries, references, aggregate=True, show_progress_bar=False):
         inLines = zip(references, summaries)
         token_doc_list, text_doc_list = tokenize_texts(inLines, self.wordrep, self.tokenize)
         p = Pool(processes=self.n_workers)

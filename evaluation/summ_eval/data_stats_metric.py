@@ -77,7 +77,7 @@ class DataStatsMetric(Metric):
                 continue
         return score_dict
 
-    def evaluate_batch(self, summaries, input_texts, aggregate=True):
+    def evaluate_batch(self, summaries, input_texts, aggregate=True, show_progress_bar=False):
         corpus_score_dict = Counter()
         p = Pool(processes=self.n_workers)
         results = p.starmap(self.evaluate_example, zip(summaries, input_texts))

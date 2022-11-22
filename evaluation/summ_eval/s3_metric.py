@@ -54,7 +54,7 @@ class S3Metric(Metric):
         score_dict = {"s3_pyr": score[0], "s3_resp": score[1]}
         return score_dict
 
-    def evaluate_batch(self, summaries, references, aggregate=False):
+    def evaluate_batch(self, summaries, references, aggregate=False, show_progress_bar=False):
         p = Pool(processes=self.n_workers)
         results = p.starmap(self.evaluate_example, zip(summaries, references))
         p.close()

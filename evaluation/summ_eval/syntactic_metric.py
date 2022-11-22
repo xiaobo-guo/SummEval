@@ -7,7 +7,7 @@ import zipfile, io
 from stanza.server import CoreNLPClient
 from summ_eval.metric import Metric
 from summ_eval.syntactic_utils import get_stats
-
+import tqdm
 dirname = os.path.dirname(__file__)
 
 if not os.path.exists(os.path.join(dirname, "stanford-corenlp-full-2018-10-05")):
@@ -38,7 +38,7 @@ class SyntacticMetric(Metric):
             answer = get_stats(client, summary)
             return answer
 
-    def evaluate_batch(self, summaries, references, aggregate=True):
+    def evaluate_batch(self, summaries, references, aggregate=True, show_progress_bar=False):
         corpus_score_dict = Counter()
         with CoreNLPClient(annotators=['tokenize', 'ssplit', 'pos', 'lemma', 'parse'], \
                            timeout=30000, memory='16G') as client:
@@ -46,7 +46,7 @@ class SyntacticMetric(Metric):
                 corpus_score_dict = Counter()
             else:
                 corpus_score_dict = []
-            for count, summ in enumerate(summaries):
+            for count, summ in enumerate(tqdm.tqdm(summaries,desc='Calculate Syntactic',ncols=100)):
                 print(count)
                 stats = get_stats(client, summ)
                 if aggregate:

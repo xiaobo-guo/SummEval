@@ -55,11 +55,11 @@ class SummaQAMetric(Metric):
         score_dict = self.qa_metric.compute(masked_questions, answer_spans, summary)
         return score_dict
 
-    def evaluate_batch(self, summaries, input_texts, aggregate=True):
+    def evaluate_batch(self, summaries, input_texts, aggregate=True, show_progress_bar=False):
         if self.tokenize:
             input_texts = [nlp(text, disable=["tagger", "textcat","lemmatizer"]) for text in input_texts]
         scores = evaluate_corpus(input_texts, summaries, batch_size=self.batch_size, \
-                  max_seq_len=self.max_seq_len, aggregate=aggregate)
+                  max_seq_len=self.max_seq_len, aggregate=aggregate,show_progress_bar=show_progress_bar)
         return scores
 
     @property

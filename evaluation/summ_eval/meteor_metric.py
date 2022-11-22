@@ -14,6 +14,7 @@ import threading
 import psutil
 import requests
 from summ_eval.metric import Metric
+import tqdm
 
 dirname = os.path.dirname(__file__)
 
@@ -110,7 +111,7 @@ class MeteorMetric(Metric):
         score_dict = {"meteor" : score}
         return score_dict
 
-    def evaluate_batch(self, summaries, references, aggregate=True):
+    def evaluate_batch(self, summaries, references, aggregate=True, show_progress_bar=False):
         scores = []
         eval_line = 'EVAL'
         with self.lock:
@@ -121,7 +122,7 @@ class MeteorMetric(Metric):
                 eval_line += ' ||| {}'.format(stat)
             self.meteor_p.stdin.write(enc('{}\n'.format(eval_line)))
             self.meteor_p.stdin.flush()
-            for _ in range(len(summaries)):
+            for _ in tqdm.tqdm(range(len(summaries)),desc='Calculate Meteor', ncols=100, disable= not show_progress_bar):
                 v = self.meteor_p.stdout.readline()
                 try:
                     scores.append(float(dec(v.strip())))
