@@ -122,7 +122,7 @@ class MeteorMetric(Metric):
                 eval_line += ' ||| {}'.format(stat)
             self.meteor_p.stdin.write(enc('{}\n'.format(eval_line)))
             self.meteor_p.stdin.flush()
-            for _ in tqdm.tqdm(range(len(summaries)),desc='Calculate Meteor', ncols=100, disable= not show_progress_bar):
+            for _ in tqdm.tqdm(range(len(summaries)),desc='Calculate Meteor', dynamic_ncols=True, disable= not show_progress_bar, leave=False):
                 v = self.meteor_p.stdout.readline()
                 try:
                     scores.append(float(dec(v.strip())))

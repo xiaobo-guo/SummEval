@@ -123,7 +123,7 @@ def batched_cdist_l2(x1, x2):
 
 def word_mover_score(refs, hyps, idf_dict_ref, idf_dict_hyp, stop_words=[], n_gram=1, remove_subwords = True, batch_size=256, show_progress_bar=False):
     preds = []
-    for batch_start in tqdm.tqdm(range(0, len(refs), batch_size), ncols=100, desc='mover score', disable= not show_progress_bar):
+    for batch_start in tqdm.tqdm(range(0, len(refs), batch_size), desc='mover score', disable= not show_progress_bar, dynamic_ncols=True, leave=False):
         batch_refs = refs[batch_start:batch_start+batch_size]
         batch_hyps = hyps[batch_start:batch_start+batch_size]
         

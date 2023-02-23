@@ -73,7 +73,7 @@ class RougeMetric(Metric):
     def evaluate_batch(self, summaries, references, aggregate=False, show_progress_bar=False):
         if not aggregate:
             results = list()
-            for ref,summ in tqdm.tqdm(zip(references, summaries),total=len(references),disable=not show_progress_bar, ncols=100, desc='Calculate Rouge'):
+            for ref,summ in tqdm.tqdm(zip(references, summaries),total=len(references),disable=not show_progress_bar, dynamic_ncols=True, desc='Calculate Rouge', leave=False):
                 try:
                     results.append(self.evaluate_example(summ,ref))
                 except:
